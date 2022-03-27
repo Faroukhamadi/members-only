@@ -1,0 +1,19 @@
+extends layout
+
+block content 
+  p.display-1.text-center.mt-5 SignUp
+  form(action="", method="POST" class="form-floating") 
+    .mb-3.row.mt-3
+      label(for="username" class="col-sm-2 col-form-label") Email
+      .col-sm-10
+        input(type="text", class="form-control", id="username", name="username")
+    .mb-3.row
+      label(for="password" class="col-sm-2 col-form-label") Password
+      .col-sm-10
+        input(type="text", class="form-control", id="password", name="password")
+    .mb-3.row
+      label(for="password" class="col-sm-2 col-form-label") Confirm Password
+      .col-sm-10
+        input(type="text", class="form-control", id="confirmation", name="confirmation")
+    .d-grid
+      button.btn.btn-primary(type="submit") Signup
