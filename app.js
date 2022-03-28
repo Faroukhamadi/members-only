@@ -13,7 +13,7 @@ const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 const User = require('./models/user');
 
-const mongoDB = process.env.MONGODB_KEY || process.env.MONGODB_URI;
+const mongoDB = process.env.MONGODB_URI || process.env.MONGODB_KEY;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error'));
