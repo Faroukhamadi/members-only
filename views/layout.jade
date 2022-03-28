@@ -15,14 +15,28 @@ html(lang="en").position-relative
           span.navbar-toggler-icon
         div(class="collapse navbar-collapse" id="navbarText")
           ul.navbar-nav.me-auto.mb-2.mb-lg-0
-            li.nav-item
-              a(href="/forms/login" class=(url === '/login' ? "nav-link active" : "nav-link ") aria-current="page") Log In
-            li.nav-item
-              a(href="/forms/signup" class=(url === '/signup' ? "nav-link active" : "nav-link ")) Sign Up
+            if (currentUser)
+              li.nav-item
+                a(href="/forms/login" class=(url === '/login' ? "nav-link active" : "nav-link ") aria-current="page") Create message
+              li.nav-item
+                a(href="/forms/signup" class=(url === '/signup' ? "nav-link active" : "nav-link ")) Become Member
+              li.nav-item
+                a(href="/forms/signup" class=(url === '/signup' ? "nav-link active" : "nav-link ")) Become Admin
+              li.nav-item
+                a(href="/forms/logout" class=(url === '/logout' ? "nav-link active" : "nav-link ")) Log Out
+              
+            else
+              li.nav-item
+                a(href="/forms/login" class=(url === '/login' ? "nav-link active" : "nav-link ") aria-current="page") Log In
+              li.nav-item
+                a(href="/forms/signup" class=(url === '/signup' ? "nav-link active" : "nav-link ")) Sign Up
             //- li.nav-item
-            //-   a(href="#" class=(true ? "nav-link active" : "nav-link ")) Condition
-  
-          span.navbar-text Created with love and affection by Farouk Hamadi
+            //-   a(href="#" class=(true ? "nav-link active" : "nav-link ")) #{currentUser.username}
+          if currentUser
+            span.navbar-text <span class="fst-italic">#{currentUser.username}</span>
+          else 
+            span.navbar-text Created with love and affection by Farouk Hamadi 
+          //- span.navbar-text (#{currentUser} ? #{currentUser.username} : Created with love and affection by Farouk Hamadi)
     .container-fluid.min-vh-100
       div.d-flex-row.justify-content-center.row
         block content

@@ -9,10 +9,6 @@ exports.user_signup_get = (req, res, next) => {
 
 exports.user_signup_post = (req, res, next) => {
   bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
-    console.log(`--------------
-    ---------------------------
--------------------------------
-    `);
     if (err) return next(err);
     const user = new User({
       username: req.body.username,
@@ -22,10 +18,6 @@ exports.user_signup_post = (req, res, next) => {
       res.redirect('/forms/login');
     });
   });
-
-  // res.render('signup', {
-  //   url: req.url,
-  // });
 };
 
 exports.user_login_get = (req, res, next) => {

@@ -61,7 +61,7 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  done(user, user.id);
+  done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {

@@ -9,8 +9,8 @@ const PostSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
-PostSchema.virtual('dateTime').get(() => {
-  const fullDate = formatISO9075(new Date());
+PostSchema.virtual('dateTime').get(function () {
+  const fullDate = formatISO9075(this.Date);
   return fullDate.substring(0, 10) + ' | ' + fullDate.substring(11, 16);
 });
 
