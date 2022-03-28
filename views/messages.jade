@@ -16,6 +16,9 @@ block content
             h5.card-title #{post.title}
             p.card-text #{post.content}
             p.card-text
-              small.text-muted Last updated #{post.dateTime} by<span class="fst-italic"> unknown</span>
-              
+            if (currentUser)
+              if (currentUser.isMember)
+                small.text-muted Last updated #{post.dateTime} by<span class="fst-italic"> #{post.user.username}</span>
+              else 
+                small.text-muted Last updated #{post.dateTime} by<span class="fst-italic"> unknown</span>
               //- button(type="button" class="btn btn-outline-danger") Delete

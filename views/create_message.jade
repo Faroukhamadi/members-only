@@ -1,0 +1,15 @@
+extends layout 
+
+block content
+  p.display-1.text-center.mt-5 Create Message
+  form(action="", method="POST" class="form-floating") 
+    .mb-3.row.mt-3
+      label(for="title" class="col-sm-2 col-form-label fs-5") Title
+      .col-sm-10
+        input(type="text", class="form-control", id="title", name="title")
+    .mb-3.row
+      label(for="message" class="col-sm-2 col-form-label fs-5") Message
+      .col-sm-10
+        textarea(class="form-control", id="message", name="message")
+    .d-grid
+      button.btn.btn-primary(type="submit") Submit

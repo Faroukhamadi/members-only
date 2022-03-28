@@ -1,0 +1,12 @@
+extends layout
+
+block content
+
+  p.display-1.text-center.mt-5 Become Member
+  form(action="", method="POST" class="form-floating") 
+    .mb-3.row.mt-3
+      label(for="memberpassword" class="col-sm-2 col-form-label fs-5") Club Password
+      .col-sm-10
+        input(type="password", class="form-control", id="memberpassword", name="memberpassword")
+    .d-grid
+      button.btn.btn-primary(type="submit") Submit

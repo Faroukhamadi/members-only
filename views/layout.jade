@@ -17,9 +17,9 @@ html(lang="en").position-relative
           ul.navbar-nav.me-auto.mb-2.mb-lg-0
             if (currentUser)
               li.nav-item
-                a(href="/forms/login" class=(url === '/login' ? "nav-link active" : "nav-link ") aria-current="page") Create message
+                a(href="/create-message" class=(url === '/create-message' ? "nav-link active" : "nav-link ") aria-current="page") Create message
               li.nav-item
-                a(href="/forms/signup" class=(url === '/signup' ? "nav-link active" : "nav-link ")) Become Member
+                a(href="/become-member" class=(url === '/become-member' ? "nav-link active" : "nav-link ")) Become Member
               li.nav-item
                 a(href="/forms/signup" class=(url === '/signup' ? "nav-link active" : "nav-link ")) Become Admin
               li.nav-item
