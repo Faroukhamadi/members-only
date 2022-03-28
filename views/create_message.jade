@@ -6,10 +6,15 @@ block content
     .mb-3.row.mt-3
       label(for="title" class="col-sm-2 col-form-label fs-5") Title
       .col-sm-10
-        input(type="text", class="form-control", id="title", name="title")
+        input(type="text", class="form-control", id="title", name="title", value=(undefined===message ? '' : message.title))
     .mb-3.row
-      label(for="message" class="col-sm-2 col-form-label fs-5") Message
+      label(for="content" class="col-sm-2 col-form-label fs-5") Message
       .col-sm-10
-        textarea(class="form-control", id="message", name="message")
+        textarea(class="form-control", id="content", name="content", value=(undefined===message ? '' : message.content))
     .d-grid
       button.btn.btn-primary(type="submit") Submit
+
+  if errors 
+    ul.list-group.list-group-flush.mt-3
+      each error in errors 
+        li.text-decoration-none.alert.alert-danger #{error.msg}

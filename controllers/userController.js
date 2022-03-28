@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const Post = require('../models/post');
-const { es } = require('date-fns/locale');
+const { body, validationResult } = require('express-validator');
 
 exports.message_list = (req, res, next) => {
   Post.find()
@@ -26,19 +26,65 @@ exports.create_message_get = (req, res, next) => {
   }
 };
 
-exports.create_message_post = (req, res, next) => {
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.message,
-    Date: new Date(),
-    user: req.app.locals.currentUser,
-  });
+// exports.create_message_post = (req, res, next) => {
+//   const post = new Post({
+//     title: req.body.title,
+//     content: req.body.message,
+//     Date: new Date(),
+//     user: req.app.locals.currentUser,
+//   });
 
-  post.save((err) => {
-    if (err) return next(err);
-    res.redirect('/');
-  });
-};
+//   post.save((err) => {
+//     if (err) return next(err);
+//     res.redirect('/');
+//   });
+// };
+
+// title: { type: String, minlength: 3, maxlength: 100, required: true },
+// content: { type: String, minlength: 10, maxlength: 300, required: true },
+
+exports.create_message_post = [
+  // Validate and sanitize fields
+  body('title')
+    .trim()
+    .isLength({ min: 3, max: 100 })
+    .escape()
+    .withMessage('Title must have a minimum length of 3 characters.'),
+  body('content')
+    .trim()
+    .isLength({ min: 10, max: 300 })
+    .escape()
+    .withMessage('Content must have a minimum length of 10 characters'),
+  // Process request after validation and sanitization
+  (req, res, next) => {
+    // Extract the validation errors from the request
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages
+      res.render('create_message', {
+        message: req.body,
+        url: req.url,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      // Data from form is valid
+
+      // Create category object with escaped and trimmed data
+      const post = new Post({
+        title: req.body.title,
+        content: req.body.content,
+        Date: new Date(),
+        user: req.app.locals.currentUser,
+      });
+      post.save((err) => {
+        if (err) return next(err);
+        res.redirect('/');
+      });
+    }
+  },
+];
 
 exports.become_member_get = (req, res, next) => {
   if (req.app.locals.currentUser) {
