@@ -1,15 +1,18 @@
+const mongoose = require('mongoose');
 require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const mongoose = require('mongoose');
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const bcrypt = require('bcrypt');
+const User = require('./models/user');
 
 // const mongoDB = process.env.MONGODB_KEY;
 const mongoDB = process.env.MONGODB_KEY || process.env.MONGODB_URI;
-console.log(mongoDB);
-
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error'));
@@ -23,11 +26,57 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.use(
+  session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+passport.use(
+  new LocalStrategy((username, password, done) => {
+    User.findOne({ username: username }, (err, user) => {
+      if (err) return done(err);
+      if (!user) return done(null, false, { message: 'Incorrect username' });
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (res) {
+          // passwords match! log user in
+          console.log('user is logged in');
+          return done(null, user);
+        } else {
+          // passwords do not match
+          console.log('passwords do not match');
+          return done(null, false, { message: 'Incorrect password' });
+        }
+      });
+    });
+  })
+);
+
+passport.serializeUser((user, done) => {
+  done(user, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id, (err, user) => {
+    done(err, user);
+  });
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/forms', formsRouter);
