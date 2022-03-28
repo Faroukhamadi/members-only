@@ -6,14 +6,19 @@ block content
     .mb-3.row.mt-3
       label(for="username" class="col-sm-2 col-form-label fs-5") Username
       .col-sm-10
-        input(type="text", class="form-control", id="username", name="username")
+        input(type="text", class="form-control", id="username", name="username" value=(undefined===post ? '' : post.username))
     .mb-3.row
       label(for="password" class="col-sm-2 col-form-label fs-5") Password
       .col-sm-10
-        input(type="password", class="form-control", id="password", name="password")
+        input(type="password", class="form-control", id="password", name="password" value=(undefined===post ? '' : post.password))
     .mb-3.row
       label(for="confirmation" class="col-sm-2 col-form-label fs-5") Confirm Password
       .col-sm-10
-        input(type="password", class="form-control", id="confirmation", name="confirmation")
+        input(type="password", class="form-control", id="confirmation", name="confirmation" value=(undefined===post ? '' : post.confirmation))
     .d-grid
       button.btn.btn-primary(type="submit") Signup
+
+  if errors 
+    ul.list-group.list-group-flush.mt-3
+      each error in errors 
+        li.text-decoration-none.alert.alert-danger #{error.msg}
