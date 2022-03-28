@@ -14,6 +14,10 @@ PostSchema.virtual('dateTime').get(function () {
   return fullDate.substring(0, 10) + ' | ' + fullDate.substring(11, 16);
 });
 
+PostSchema.virtual('url').get(function () {
+  return '/delete/' + this._id;
+});
+
 const Post = mongoose.model('Post', PostSchema);
 
 module.exports = Post;

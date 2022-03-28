@@ -7,7 +7,7 @@ block content
     - let random = Math.round(Math.random() * arr.length) - 1
     - while (random < 0) random = Math.round(Math.random() * arr.length) - 1
     .col-xs-12.d-flex.justify-content-center.mt-3
-    div(class="card mb-3 " style="max-width: 540px;")
+    div(class="card mb-3 " style="max-width: 540px;" id=post._id)
       .row.g-0
         .col-md-4
           img(src=arr[random], alt="avatar" class="img-fluid rounded-start")
@@ -19,6 +19,8 @@ block content
             if (currentUser)
               if (currentUser.isMember)
                 small.text-muted Last updated #{post.dateTime} by<span class="fst-italic"> #{post.user.username}</span>
-              else 
-                small.text-muted Last updated #{post.dateTime} by<span class="fst-italic"> unknown</span>
-              //- button(type="button" class="btn btn-outline-danger") Delete
+              if (currentUser.isAdmin)
+                  form(action=post.url, method="POST") 
+                      button(type="submit" class="btn btn-outline-danger") Delete
+            else 
+              small.text-muted Last updated 0000-00-00 | 00:00 by<span class="fst-italic"> unknown</span>

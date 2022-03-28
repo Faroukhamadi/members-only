@@ -21,7 +21,7 @@ html(lang="en").position-relative
               li.nav-item
                 a(href="/become-member" class=(url === '/become-member' ? "nav-link active" : "nav-link ")) Become Member
               li.nav-item
-                a(href="/forms/signup" class=(url === '/signup' ? "nav-link active" : "nav-link ")) Become Admin
+                a(href="/become-admin" class=(url === '/become-admin' ? "nav-link active" : "nav-link ")) Become Admin
               li.nav-item
                 a(href="/forms/logout" class=(url === '/logout' ? "nav-link active" : "nav-link ")) Log Out
               
@@ -30,13 +30,10 @@ html(lang="en").position-relative
                 a(href="/forms/login" class=(url === '/login' ? "nav-link active" : "nav-link ") aria-current="page") Log In
               li.nav-item
                 a(href="/forms/signup" class=(url === '/signup' ? "nav-link active" : "nav-link ")) Sign Up
-            //- li.nav-item
-            //-   a(href="#" class=(true ? "nav-link active" : "nav-link ")) #{currentUser.username}
           if currentUser
             span.navbar-text <span class="fst-italic">#{currentUser.username}</span>
           else 
             span.navbar-text Created with love and affection by Farouk Hamadi 
-          //- span.navbar-text (#{currentUser} ? #{currentUser.username} : Created with love and affection by Farouk Hamadi)
     .container-fluid.min-vh-100
       div.d-flex-row.justify-content-center.row
         block content
@@ -44,7 +41,7 @@ html(lang="en").position-relative
     .navbar.w-100.position-absolute.navbar-dark.bg-dark.d-flex.flex-wrap.justify-content-between.align-items-center.py-3.my-4.border-top.text-white
       .col-md-4.d-flex.align-items-center
         a(href="#" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1") 
-        span.text-muted.ms-3 Copyright © 2021 by Farouk Hamadi.
+        span.text-muted.ms-3 Copyright © 2022 by Farouk Hamadi.
       ul.nav.col-md-4.justify-content-end.list-unstyled.d-flex.me-4
         li.ms-3
           a(href="https://twitter.com/Faroukk21258690" target="_blank" class="text-muted")
