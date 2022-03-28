@@ -11,7 +11,6 @@ const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 const User = require('./models/user');
 
-// const mongoDB = process.env.MONGODB_KEY;
 const mongoDB = process.env.MONGODB_KEY || process.env.MONGODB_URI;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
@@ -48,11 +47,9 @@ passport.use(
       bcrypt.compare(password, user.password, (err, res) => {
         if (res) {
           // passwords match! log user in
-          console.log('user is logged in');
           return done(null, user);
         } else {
           // passwords do not match
-          console.log('passwords do not match');
           return done(null, false, { message: 'Incorrect password' });
         }
       });

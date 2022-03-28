@@ -2,11 +2,20 @@ extends layout
 
 block content
 
-  p.display-1.text-center.mt-5 Become Member
-  form(action="", method="POST" class="form-floating") 
-    .mb-3.row.mt-3
-      label(for="memberpassword" class="col-sm-2 col-form-label fs-5") Club Password
-      .col-sm-10
-        input(type="password", class="form-control", id="memberpassword", name="memberpassword")
-    .d-grid
-      button.btn.btn-primary(type="submit") Submit
+  if currentUser.isMember
+    h1.display-1.text-center.mt-5 Already a Member
+    a(href="/").display-1.text-center.mt-5.text-decoration-none.text-reset Go to Home page
+  else 
+    p.display-1.text-center.mt-5 Become Member
+    form(action="", method="POST" class="form-floating") 
+      .mb-3.row.mt-3
+        label(for="memberpassword" class="col-sm-2 col-form-label fs-5") Club Password
+        .col-sm-10
+          input(type="password", class="form-control", id="memberpassword", name="memberpassword")
+      .d-grid
+        button.btn.btn-primary(type="submit") Submit
+
+  if errors 
+    ul.list-group.list-group-flush.mt-3
+      each error in errors 
+        li.text-decoration-none.alert.alert-danger #{error.msg}

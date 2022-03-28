@@ -7,7 +7,6 @@ exports.message_list = (req, res, next) => {
     .populate('user')
     .exec((err, post_list) => {
       if (err) return next(err);
-      console.log(req.app.locals.currentUser);
       res.render('messages', {
         post_list,
         user: req.app.locals.currentUser,
@@ -25,24 +24,6 @@ exports.create_message_get = (req, res, next) => {
     res.redirect('/');
   }
 };
-
-// exports.create_message_post = (req, res, next) => {
-//   const post = new Post({
-//     title: req.body.title,
-//     content: req.body.message,
-//     Date: new Date(),
-//     user: req.app.locals.currentUser,
-//   });
-
-//   post.save((err) => {
-//     if (err) return next(err);
-//     res.redirect('/');
-//   });
-// };
-
-// title: { type: String, minlength: 3, maxlength: 100, required: true },
-// content: { type: String, minlength: 10, maxlength: 300, required: true },
-
 exports.create_message_post = [
   // Validate and sanitize fields
   body('title')
@@ -96,21 +77,54 @@ exports.become_member_get = (req, res, next) => {
   }
 };
 
-exports.become_member_post = (req, res, next) => {
-  if (req.body.memberpassword === process.env.MEMBER_PASSWORD) {
-    User.findByIdAndUpdate(
-      req.app.locals.currentUser._id,
-      { isMember: true },
-      (err, results) => {
-        if (err) return next(err);
-        res.redirect('/');
+exports.become_member_post = [
+  // Validate and sanitize fields
+  body('memberpassword')
+    .trim()
+    .isLength({ min: 5, max: 300 })
+    .escape()
+    .withMessage('Password must have a minimum of 5 characters')
+    .isLength({ min: 1, max: 300 })
+    .withMessage('Password is required.'),
+  body('memberpassword').custom((value, { req }) => {
+    if (value !== process.env.MEMBER_PASSWORD) {
+      throw new Error(
+        'Password confirmation does not match membership password.'
+      );
+    } else {
+      return true;
+    }
+  }),
+
+  // Process request after validation and sanitization
+  (req, res, next) => {
+    // Extract the validation errors from request
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.render('become_member', {
+        url: req.url,
+        errors: errors.array(),
+        memberpassword: req.body.memberpassword,
+      });
+      return;
+    } else {
+      // Data from form is valid
+      if (req.body.memberpassword === process.env.MEMBER_PASSWORD) {
+        User.findByIdAndUpdate(
+          req.app.locals.currentUser._id,
+          { isMember: true },
+          (err, results) => {
+            if (err) return next(err);
+            res.redirect('/');
+          }
+        );
       }
-    );
-  }
-};
+    }
+  },
+];
 
 exports.become_admin_get = (req, res, next) => {
-  // Some text
   if (req.app.locals.currentUser) {
     res.render('become_admin', {
       url: req.url,
@@ -120,33 +134,57 @@ exports.become_admin_get = (req, res, next) => {
   }
 };
 
-exports.become_admin_post = (req, res, next) => {
-  if (req.body.adminpassword === process.env.ADMIN_PASSWORD) {
-    User.findByIdAndUpdate(
-      req.app.locals.currentUser._id,
-      { isAdmin: true },
-      (err, results) => {
-        if (err) return next(err);
-        res.redirect('/');
+exports.become_admin_post = [
+  body('adminpassword')
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage('Admin password is required.'),
+  body('adminpassword').custom((value, { req }) => {
+    if (value !== process.env.ADMIN_PASSWORD) {
+      throw new Error('Password does not match Admin Password.');
+    } else {
+      return true;
+    }
+  }),
+
+  // Process request after sanitization
+  (req, res, next) => {
+    // Extract the validation errors from request
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.render('become_admin', {
+        url: req.url,
+        errors: errors.array(),
+        adminpassword: req.body.adminpassword,
+      });
+      return;
+    } else {
+      // Data from form is valid
+      if (req.body.adminpassword === process.env.ADMIN_PASSWORD) {
+        User.findByIdAndUpdate(
+          req.app.locals.currentUser._id,
+          { isAdmin: true },
+          (err, results) => {
+            if (err) return next(err);
+            res.redirect('/');
+          }
+        );
       }
-    );
-  }
-};
+    }
+  },
+];
 
 exports.delete_message_get = (req, res, next) => {
-  console.log('hello1');
   res.render('delete_message', {
     url: req.url,
   });
 };
 
 exports.delete_message_post = (req, res, next) => {
-  console.log('hello2');
   Post.findByIdAndRemove(req.params.id, (err, post) => {
-    console.log(`------------------------
-    HERE --------------------`);
     if (err) return next(err);
-    console.log('Post successfully deleted');
     res.redirect('/');
   });
 };
